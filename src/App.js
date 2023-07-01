@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+import pic from "./Images/Weather-default.png";
 
 const App = () => {
   const [city, setCity] = useState('');
@@ -8,6 +9,7 @@ const App = () => {
   const [forecastData, setForecastData] = useState(null);
   const [isCityNotFound, setIsCityNotFound] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState('');
+  const [showDefaultImage, setShowDefaultImage] = useState(true);
   const API_KEY = '30d4741c779ba94c470ca1f63045390a';
 
   // Weather Data Start --------------------------------------------
@@ -18,14 +20,16 @@ const App = () => {
       );
       setWeatherData(response.data);
       setIsCityNotFound(false);
+      setShowDefaultImage(false);
 
-      getForecast()
+      getForecast() // Weather Forecast Data Calling
     } catch (error) {
       console.log(error);
       if (error.response && error.response.status === 404) {
         setWeatherData(null);
         setForecastData(null)
         setIsCityNotFound(true);
+        setShowDefaultImage(false);
       }
     }
   };
@@ -46,12 +50,15 @@ const App = () => {
 
   // Weather Forecast Data End --------------------------------------------
 
-  // Convert temperature --------------------------------------------
+  // Convert temperature Start --------------------------------------------
+
   const convertToCelsius = (temperature) => {
     return Math.round(temperature);
   };
 
-  // Show Date --------------------------------------------
+  // Convert temperature End --------------------------------------------
+
+  // Show Date Start --------------------------------------------
   useEffect(() => {
     const getCurrentDateTime = () => {
       const currentDate = new Date();
@@ -70,19 +77,44 @@ const App = () => {
     getCurrentDateTime();
   }, []);
 
-  return (
-    <div className='container'>
+  // Show Date End --------------------------------------------
 
-      <nav class="navbar navbar-dark bg-dark mb-3">
+  // Weather Type Start --------------------------------------------------
+  const getWeatherAnimation = (weatherCondition) => {
+    switch (weatherCondition) {
+      case 'Clouds':
+        return 'cloudy';
+      case 'Rain':
+        return 'rainy';
+      case 'Haze':
+        return 'haze';
+      case 'ClearSky':
+        return 'clearsky';
+      case 'Thunderstorm':
+        return 'thunderstorm';
+      default:
+        return 'default';
+    }
+  };
+
+  // Weather Type End --------------------------------------------------
+
+
+  return (
+    <div className={`App ${weatherData && getWeatherAnimation(weatherData.weather[0].main)}`}>
+
+      {/* Navbar */}
+      <nav class="container navbar navbar-dark bg-dark mb-3">
         <div class="container-fluid">
-          <span class="navbar-brand ms-3 h1"><i class="bi bi-umbrella-fill"></i> 
-          <span className='appname'> WeatherNow</span></span>
-          <span className='text-white'>Welcome to my weather app! Enter in a city to get the weather</span>
+          <span class="navbar-brand ms-3 h1">
+            <i class="bi bi-umbrella-fill"></i>
+            <span className='appname'> WeatherNow</span></span>
+          <span className='text-white'>Welcome to my weather app! Enter your city name to get the weather</span>
         </div>
       </nav>
 
-
-      <div className='weather'>
+      <div className='weather container'>
+        {/* Input box and Button */}
         <div className='weather1'>
           <input
             type="text"
@@ -90,15 +122,11 @@ const App = () => {
             onChange={(e) => setCity(e.target.value)}
             placeholder="Enter Your City..."
           />
-          <button onClick={getWeather} type="button" class="btn btn-info mx-1">Search</button>
-        </div>
-
-        <div className='weather2'>
-          {/* <button onClick={getWeather} type="button" class="btn btn-info">Get Weather</button> */}
-          {/* <button onClick={getForecast} type="button" class="btn btn-warning">Get Forecast</button> */}
+          <button onClick={getWeather} type="button" class="btn btn-dark mx-1">Search</button>
         </div>
 
         <div className='weather3'>
+          {/* Weather Data print */}
           {weatherData && (
             <div>
               <div class="data text-white bg-dark mb-3" >
@@ -156,13 +184,13 @@ const App = () => {
                     <div className="col">
                       <div className=" border p-2 text-center border-info">
                         <h6>SUNRISE</h6>
-                        <p>{new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
+                        <p>{new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                       </div>
                     </div>
                     <div className="col">
                       <div className=" border p-2 text-center border-info">
                         <h6>SUNSET</h6>
-                        <p>{new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
+                        <p>{new Date(weatherData.sys.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                       </div>
                     </div>
                     <div className="col">
@@ -183,9 +211,15 @@ const App = () => {
             </div>
           )}
 
+          {/* Hourly Forecast data print */}
           {forecastData && (
             <div class="data2 ">
-              <h2><center>Hourly Forecast for Today</center></h2>
+              {/* <h2><center>Hourly Forecast for Today</center></h2> */}
+              <div class="card text-white bg-dark mb-3" style={{ maxWidth: "18rem;" }}>
+                <div class="card-body">
+                  <h5 class="card-title text-center h4">Hourly Forecast for Today</h5>
+                </div>
+              </div>
               <table class="table table-dark">
                 <thead>
                   <tr>
@@ -205,13 +239,13 @@ const App = () => {
                       <table class="table table-dark">
                         <tbody>
                           <tr>
-                            <td data-label="Time">{forecastDate.toLocaleTimeString()}</td>
+                            <td data-label="Time">{forecastDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</td>
                             <td data-label="Temperature">{convertToCelsius(forecast.main.temp)}°C</td>
                             <td data-label="Weather">
-                            <img
-                              src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`}
-                              alt={forecast.weather[0].description}
-                            />
+                              <img
+                                src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`}
+                                alt={forecast.weather[0].description}
+                              />
                               {forecast.weather[0].description}</td>
                             <td data-label="Humidity">{forecast.main.humidity}%</td>
                             <td data-label="Wind Speed">{forecast.wind.speed} m/s</td>
@@ -226,13 +260,33 @@ const App = () => {
             </div>
           )}
 
+          {/* If City Not Found */}
           {isCityNotFound && (
             <h3 className='text-center text-danger'>City Not Found!</h3>
           )}
 
+          {/* Showing Default Image */}
+          {showDefaultImage &&
+            <div className='defautImg'>
+              <img src={pic} alt="Default" className='mx-auto d-block img-fluid' />
+              <p className='text-center'>
+                Experience weather forecasting at its finest with our WeatherNow app. Get real-time
+                updates on temperature, humidity, wind speed, and more. Plan your day confidently with
+                hourly and daily forecasts tailored to your location. Stay informed and prepared for any
+                weather condition, wherever you are.
+              </p>
+            </div>
+          }
+
+          {/* 5-Day Forecast Print */}
           {forecastData && (
             <div class="data2  mb-5">
-              <h2><center>5-Day Forecast</center></h2>
+              {/* <h2><center>5-Day Forecast</center></h2> */}
+              <div class="card text-white bg-dark mb-3" style={{ maxWidth: "18rem;" }}>
+                <div class="card-body">
+                  <h5 class="card-title text-center h4">5-Day Forecast</h5>
+                </div>
+              </div>
               <table class="table table-dark ">
                 <thead>
                   <tr>
@@ -251,30 +305,31 @@ const App = () => {
                     <table class="table table-dark">
                       <tbody>
                         <tr>
-                          <td data-label="Date">{forecast.dt_txt.split(' ')[0]}</td>
+                          <td data-label="Date">
+                            {new Date(forecast.dt_txt.split(' ')[0]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </td>
                           <td data-label="Temperature">{convertToCelsius(forecast.main.temp)}°C</td>
                           <td data-label="Weather">
-                          <img
+                            <img
                               src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`}
                               alt={forecast.weather[0].description}
                             />
                             {forecast.weather[0].description}
-                            </td>
+                          </td>
                           <td data-label="Humidity">{forecast.main.humidity}%</td>
                           <td data-label="Wind Speed">{forecast.wind.speed} m/s</td>
                         </tr>
                       </tbody>
                     </table>
-
                   </div>
                 ))}
             </div>
           )}
-
         </div>
       </div>
 
-      <footer class="container footer  bg-dark text-white text-center fixed-bottom mt-5">
+      {/* Footer */}
+      <footer class="container footer  bg-dark text-white text-center" style={{marginTop: "39px"}}>
         <div class="container">
           <span>
             – Thanks for visiting! – <br />
