@@ -108,7 +108,7 @@ const App = () => {
         <div class="container-fluid">
           <span class="navbar-brand ms-3 h1">
             <i class="bi bi-umbrella-fill"></i>
-            <span className='appname'> WeatherNow</span></span>
+            <span className='appname'> WeatherNows</span></span>
           <span className='text-white'>Welcome to my weather app! Enter your city name to get the weather</span>
         </div>
       </nav>
@@ -290,7 +290,7 @@ const App = () => {
             <div className='defautImg'>
               <img src={pic} alt="Default" className='mx-auto d-block img-fluid' />
               <p className='text-center'>
-                Experience weather forecasting at its finest with our WeatherNow app. Get real-time
+                Experience weather forecasting at its finest with our WeatherNows app. Get real-time
                 updates on temperature, humidity, wind speed, and more. Plan your day confidently with
                 hourly and daily forecasts tailored to your location. Stay informed and prepared for any
                 weather condition, wherever you are.
@@ -353,7 +353,7 @@ const App = () => {
         <div class="container">
           <span>
             – Thanks for visiting! – <br />
-            WeatherNow | <span class="far fa-copyright" aria-hidden="true"></span> 2023 All Rights Reserved.
+            WeatherNows | <span class="far fa-copyright" aria-hidden="true"></span> 2023 All Rights Reserved.
           </span>
         </div>
       </footer>
