@@ -103,7 +103,7 @@ const App = () => {
   return (
     <div className={`App ${weatherData && getWeatherAnimation(weatherData.weather[0].main)}`}>
 
-      {/* Navbar */}
+      {/* Navbar -----------------------------------------*/}
       <nav class="container navbar navbar-dark bg-dark mb-3">
         <div class="container-fluid">
           <span class="navbar-brand ms-3 h1">
@@ -129,8 +129,28 @@ const App = () => {
           {/* Weather Data print */}
           {weatherData && (
             <div>
+              <div class="maincard card text-white bg-dark mb-3 " >
+                <div class="card-body">
+                  <h5 class="card-title h2 text-center"><i class="bi bi-geo-alt-fill"></i> {weatherData.name}</h5>
+                  <p class="card-text text-center">
+                    <p className='temp'>{convertToCelsius(weatherData.main.temp)}°C</p>
+                    <img
+                      src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
+                      alt={weatherData.weather[0].description}
+                    />
+                    <p className='weatherDes'>{weatherData.weather[0].main}</p>
+                    <p className='feelsLike'>Feels Like {convertToCelsius(weatherData.main.feels_like)}°C</p>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+
+          {weatherData && (
+            <div>
               <div class="data text-white bg-dark mb-3" >
-                <h5 class="card-title h4 mb-3 ms-3"><i class="bi bi-geo-alt-fill"></i> {weatherData.name} <p style={{ fontSize: "16px" }}>{currentDateTime}</p></h5>
+                <h5 class="card-title h4 mb-3 ms-3"> <p>{currentDateTime}</p></h5>
                 <div class="container overflow-hidden">
                   <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
                     <div class="col">
@@ -142,7 +162,7 @@ const App = () => {
                     <div class="col">
                       <div class=" border p-2 text-center border-info">
                         <h6>WEATHER</h6>
-                        <p>{weatherData.weather[0].main}</p>
+                        <p>{weatherData.weather[0].description}</p>
                       </div>
                     </div>
                     <div class="col">
@@ -329,7 +349,7 @@ const App = () => {
       </div>
 
       {/* Footer */}
-      <footer class="container footer  bg-dark text-white text-center" style={{marginTop: "39px"}}>
+      <footer class="container footer fixed-bottom  bg-dark text-white text-center" style={{ marginTop: "39px" }}>
         <div class="container">
           <span>
             – Thanks for visiting! – <br />
