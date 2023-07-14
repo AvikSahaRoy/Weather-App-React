@@ -146,90 +146,41 @@ const App = () => {
             </div>
           )}
 
-
           {weatherData && (
             <div>
-              <div class="data text-white bg-dark mb-3" >
-                <h5 class="card-title h4 mb-3 ms-3"> <p>{currentDateTime}</p></h5>
-                <div class="container overflow-hidden">
-                  <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
-                    <div class="col">
-                      <div class="border p-2 text-center border-info">
-                        <h6>TEMPERATURE</h6>
-                        <p>{convertToCelsius(weatherData.main.temp)}°C</p>
+              <div className="data text-white bg-dark mb-3">
+                <h5 className="card-title h4 mb-3 ms-3">
+                  <p>{currentDateTime}</p>
+                </h5>
+                <div className="container overflow-hidden">
+                  <div className="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
+                    {[
+                      { label: "TEMPERATURE", value: convertToCelsius(weatherData.main.temp) + "°C" },
+                      { label: "WEATHER", value: weatherData.weather[0].description },
+                      { label: "FEELS LIKE", value: convertToCelsius(weatherData.main.feels_like) + "°C" },
+                      { label: "HUMIDITY", value: weatherData.main.humidity + "%" },
+                      { label: "WIND SPEED", value: weatherData.wind.speed + " m/s" },
+                      { label: "VISIBILITY", value: weatherData.visibility / 1000 + " km" },
+                      { label: "MAX TEMPERATURE", value: convertToCelsius(weatherData.main.temp_max) + "°C" },
+                      { label: "MIN TEMPERATURE", value: convertToCelsius(weatherData.main.temp_min) + "°C" },
+                      { label: "SUNRISE", value: new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) },
+                      { label: "SUNSET", value: new Date(weatherData.sys.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) },
+                      { label: "PRESSURE", value: weatherData.main.pressure + " hPa" },
+                      { label: "DEW POINT", value: convertToCelsius(weatherData.main.temp - (100 - weatherData.main.humidity) / 5) + "°C" }
+                    ].map((item, index) => (
+                      <div className="col" key={index}>
+                        <div className="border p-2 text-center border-info">
+                          <h6>{item.label}</h6>
+                          <p>{item.value}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>WEATHER</h6>
-                        <p>{weatherData.weather[0].description}</p>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>FEELS LIKE</h6>
-                        <p>{convertToCelsius(weatherData.main.feels_like)}°C</p>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>HUMIDITY</h6>
-                        <p>{weatherData.main.humidity}%</p>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>WIND SPEED</h6>
-                        <p>{weatherData.wind.speed} m/s</p>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>VISIBILITY</h6>
-                        <p>{weatherData.visibility / 1000} km</p>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>MAX TEMPERATURE</h6>
-                        <p>{convertToCelsius(weatherData.main.temp_max)}°C</p>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class=" border p-2 text-center border-info">
-                        <h6>MIN TEMPERATURE</h6>
-                        <p>{convertToCelsius(weatherData.main.temp_min)}°C</p>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className=" border p-2 text-center border-info">
-                        <h6>SUNRISE</h6>
-                        <p>{new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className=" border p-2 text-center border-info">
-                        <h6>SUNSET</h6>
-                        <p>{new Date(weatherData.sys.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className=" border p-2 text-center border-info">
-                        <h6>PRESSURE</h6>
-                        <p>{weatherData.main.pressure} hPa</p>
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className=" border p-2 text-center border-info">
-                        <h6>DEW POINT</h6>
-                        <p>{convertToCelsius(weatherData.main.temp - (100 - weatherData.main.humidity) / 5)}°C</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           )}
+
 
           {/* Hourly Forecast data print */}
           {forecastData && (
@@ -243,11 +194,9 @@ const App = () => {
               <table class="table table-dark">
                 <thead>
                   <tr>
-                    <th scope="col">TIME</th>
-                    <th scope="col">TEMPERATURE</th>
-                    <th scope="col">WEATHER</th>
-                    <th scope="col">HUMIDITY</th>
-                    <th scope="col">WIND SPEED</th>
+                    {['TIME', 'TEMPERATURE', 'WEATHER', 'HUMIDITY', 'WIND SPEED'].map((header) => (
+                      <th key={header} scope="col">{header}</th>
+                    ))}
                   </tr>
                 </thead>
               </table>
@@ -310,11 +259,9 @@ const App = () => {
               <table class="table table-dark ">
                 <thead>
                   <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Temperature</th>
-                    <th scope="col">Weather</th>
-                    <th scope="col">Humidity</th>
-                    <th scope="col">Wind Speed</th>
+                    {['Date', 'Temperature', 'Weather', 'Humidity', 'Wind Speed'].map((header) => (
+                      <th key={header} scope="col">{header}</th>
+                    ))}
                   </tr>
                 </thead>
               </table>
