@@ -302,7 +302,7 @@ const App = () => {
         <div class="container">
           <span>
             Designed & Created by <a href='https://aviksaharoy.github.io/' target='_blank'>Avik</a> <br />
-            WeatherNows | <span class="far fa-copyright" aria-hidden="true"></span> 2023 All Rights Reserved.
+            WeatherNows | <span class="far fa-copyright" aria-hidden="true"></span> 2024 All Rights Reserved.
           </span>
         </div>
       </footer>
